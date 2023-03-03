@@ -3,12 +3,12 @@ server:
 
 spring:
   liquibase:
-    user: folders_server_ivan
+    user: folders_saver_ivan
     password: 12345
     change-log: 'classpath:db/changelog/changelog.xml'
   datasource:
-    url: "jdbc:postgresql://194.67.105.79:5432/folders_server_db"
-    username: folders_server_ivan
+    url: "jdbc:postgresql://194.67.105.79:5432/folders_saver_db"
+    username: folders_saver_ivan
     password: 12345
 
 logging:

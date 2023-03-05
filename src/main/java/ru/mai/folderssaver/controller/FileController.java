@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,16 +36,19 @@ public class FileController {
     private final FileService fileService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<FileDTO> getAllFiles() {
         return fileService.getAllFiles();
     }
 
     @PostMapping()
+    @PreAuthorize("hasAuthority('MEMBER')")
     public void storeFile(@RequestBody MultipartFile file, @RequestParam String path) throws IOException {
         fileService.storeFile(file, path);
     }
 
     @GetMapping("/load")
+    @PreAuthorize("hasAuthority('MEMBER')")
     public ResponseEntity<?> loadFileByPath(@RequestParam String path) throws IOException {
         FileDownloadUtil downloadUtil = new FileDownloadUtil();
 

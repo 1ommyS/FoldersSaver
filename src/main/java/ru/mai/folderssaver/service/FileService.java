@@ -10,10 +10,13 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mai.folderssaver.dao.FileRepository;
 import ru.mai.folderssaver.dto.FileDTO;
+import ru.mai.folderssaver.dto.FileEditDto;
+import ru.mai.folderssaver.exception.JwtTokenExpiredException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,6 +36,7 @@ public class FileService {
     private final FileRepository repository;
     private final ModelMapper mapper;
     private Path rootLocation;
+    private final JwtService jwtService;
 
 
     public void init(String path) throws IOException {
@@ -75,5 +79,12 @@ public class FileService {
 
     public void removeFileByPath(String path) throws IOException {
         FileUtils.deleteDirectory(Paths.get(path).toFile());
+    }
+
+    public void editFile(FileEditDto dto) throws JwtTokenExpiredException, FileNotFoundException {
+        if (jwtService.isTokenExpired(dto.getToken())) throw new JwtTokenExpiredException("Token is expired");
+        PrintWriter prw = new PrintWriter(dto.getPath());
+        prw.println(dto.getContent());
+        prw.close();
     }
 }
